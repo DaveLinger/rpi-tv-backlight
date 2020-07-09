@@ -1,5 +1,14 @@
 # rpi-tv-backlight
-Software for controlling an LED strip connected to a raspberry pi's GPIO based on time of day and TV state determined via HDMI-CEC
+
+Software for controlling an LED strip connected to a raspberry pi's GPIO based on time of day and TV state determined via HDMI-CEC.
+
+# Functionality
+
+The software determines the sunrise and sunset times at your location today combined with the current power state of your TV to turn an LED strip on and off. The idea is:
+-If it's daytime, the LED strip is off.
+-If it's night time and the TV is off, the LED strip is on.
+
+The strip will come on automatically at sunset if the TV is off, will turn off automatically at sunrise (if it hasn't already been turned off by the TV coming on), and the strip will always turn off if the TV turns on.
 
 # How to configure hardware
 
