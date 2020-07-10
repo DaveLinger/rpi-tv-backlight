@@ -26,13 +26,12 @@ This assumes you have a WS2812B 60-led strand connected to GPIO pin 12, (GPIO 18
 # How to install software
 
 - Install Raspbian Buster. `sudo apt-get update`, `sudo apt-get upgrade`.
-- Put these files somewhere. I have mine in pi's home directory. For example /home/pi/cec-monitor.sh.
-- Edit 
+- Put these files somewhere. I have mine in pi's home directory. For example `/home/pi/cec-monitor.sh`.
 - Install cec-utils. `sudo apt-get install cec-utils`.
-- Add your user to sudoers file to ensure they can sudo without password (required to control LED strip with python and to set clock)
-- Install python and install rpi-ws281x with pip
-- Install node.js and install pm2 with npm
-- `npm startup` to get the command to ensure pm2 starts at boot. This will create the systemd service file.
+- Add your user to sudoers file to ensure they can sudo without password (required to control LED strip with python and to set clock) (https://www.mathworks.com/help/supportpkg/raspberrypi/ug/enable-passwordless-sudo-in-linux-on-raspberry-pi-hardware.html)
+- Install pip with `sudo apt install python3-pip` and install rpi-ws281x with `sudo pip install rpi-ws281x`
+- Install node.js (https://www.instructables.com/id/Install-Nodejs-and-Npm-on-Raspberry-Pi/) and install pm2 with `sudo npm install -g pm2`
+- Use `npm startup` to show the command to ensure pm2 starts at boot, run the command. This will create the systemd service file.
 - If you aren't going to make your filesystem read-only, you can start the scripts with the following commands, after which they should recover after a reboot:
   - `pm2 start cec-monitor.sh`
   - `pm2 start tvbased-controller.sh`
@@ -41,7 +40,7 @@ This assumes you have a WS2812B 60-led strand connected to GPIO pin 12, (GPIO 18
 
 If you wish to run this on a read-only filesystem (recommended), follow these instructions: https://medium.com/swlh/make-your-raspberry-pi-file-system-read-only-raspbian-buster-c558694de79
 
-I added an additional tmpfs (ram) mount in /etc/fstab just for this script's temporary files: `tmpfs        /trash          tmpfs   nosuid,nodev         0       0 `
+I added an additional tmpfs (ram) mount in `/etc/fstab` just for this script's temporary files: `tmpfs        /trash          tmpfs   nosuid,nodev         0       0 `
 
 You will need to kill pm2, remove ~/.pm2 directory, and make a symbolic link pointing that directory to your new tmpfs mount with `ln -s /trash/ ~/.pm2` (This way when pm2 starts with a read-only filesystem, it can still write to this folder in RAM)
 
