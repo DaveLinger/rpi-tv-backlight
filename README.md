@@ -57,7 +57,8 @@ Now reboot and use `pm2 list` and the script should be running. "npm logs" to se
 
 - HDMI-CEC is known to be poorly supported/implemented on most equipment. This may be flaky.
 - You can change the color/behavior of the lights by editing the code or RGB values in light.py.
-- You may need to adjust some of the variables at the top of the script files for your setup. For example, your location code for accurate sunrise/sunset times, and your tmpfs path.
+- You may need to adjust some of the variables at the top of the script files for your setup.
+- By default, your location/zip/postal code is determined by geolocating you by your IP address. If you uncomment the location code variable at the top of the scripts, it will use that location code instead.
 
 # Version 2 vs Version 1
 
