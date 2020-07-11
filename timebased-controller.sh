@@ -92,6 +92,15 @@ do
 				echo "on" > ${workpath}light_state.log
 			fi
 		fi
+		if [[ $now_minutes -lt $sst_minutes || $now_minutes -gt $srt_minutes ]]; then
+			#it's after sunrise or before sunset, light should be off.
+			if [[ $lightstate == "on" ]]; then
+				#TV is off, it's light outside, and the light is on. Let's turn it off.
+				echo "Turning light off"
+				sudo /usr/bin/python ${pypath}light.py off
+				echo "off" > ${workpath}light_state.log
+			fi
+		fi
 	fi
 
 sleep 60
