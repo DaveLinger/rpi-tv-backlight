@@ -123,7 +123,6 @@ while read line ; do
 			if grep -q "${poweron_str1}\|${poweron_str2}" <<< "$line"; then
 				echo "TV turned on."
 				echo "on" > ${workpath}tv_state.log
-				echo "$lightstate"
 					#if the light's on, turn it off.
 					if [[ $lightstate == "on" ]]; then
 						echo "Turning light off"
