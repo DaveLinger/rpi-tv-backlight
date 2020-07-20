@@ -96,10 +96,15 @@ while read line ; do
 			now_hour=`date +"%-H"`
 			now_min=`date +"%-M"`
 			
-			#Convert all times into total minutes since midnight for easy comparison
-			srt_minutes=$((sunrise_hour * 60 + sunrise_min))
-			sst_minutes=$((sunset_hour * 60 + sunset_min))
-			now_minutes=$((now_hour * 60 + now_min))
+                        trimmed_srt_hours=${sunrise_hour#0}
+                        trimmed_srt_minutes=${sunrise_min#0}
+                        trimmed_sst_hours=${sunset_hour#0}
+                        trimmed_sst_minutes=${sunset_min#0}
+
+                        #Convert all times into total minutes since midnight for easy comparison
+                        srt_minutes=$((trimmed_srt_hours * 60 + trimmed_srt_minutes))
+                        sst_minutes=$((trimmed_sst_hours * 60 + trimmed_sst_minutes))
+                        now_minutes=$((now_hour * 60 + now_min))
 			
 			if grep -q "${poweroff_str1}\|${poweroff_str2}" <<< "$line"; then
 				echo "TV turned off."
