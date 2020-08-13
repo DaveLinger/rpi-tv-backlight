@@ -40,7 +40,7 @@ This assumes you have a WS2812B 60-led strand connected to GPIO pin 12, (GPIO 18
 
 If you wish to run this on a read-only filesystem (recommended), follow these instructions: https://medium.com/swlh/make-your-raspberry-pi-file-system-read-only-raspbian-buster-c558694de79
 
-I added an additional tmpfs (ram) mount in `/etc/fstab` just for this script's temporary files: `tmpfs        /trash          tmpfs   nosuid,nodev         0       0 `
+I added an additional tmpfs (ram) mount in `/etc/fstab` just for this script's temporary files, first create the mount point: `mkdir /trash`  Then add the following to fstab: `tmpfs        /trash          tmpfs   nosuid,nodev         0       0 `
 
 You will need to kill pm2, remove ~/.pm2 directory, and make a symbolic link pointing that directory to your new tmpfs mount with `ln -s /trash/ ~/.pm2` (This way when pm2 starts with a read-only filesystem, it can still write to this folder in RAM)
 

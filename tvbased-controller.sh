@@ -11,12 +11,6 @@ pypath=/home/pi/
 #Path to the temporary weather file
 tmpfile=${workpath}$locationcode.out
 
-#These are the strings we are looking for from cec-client
-poweroff_str1="power status changed from 'unknown' to 'standby'"
-poweroff_str2="power status changed from 'on' to 'standby'"
-poweron_str1="power status changed from 'standby' to 'in transition from standby to on'"
-poweron_str2="power status changed from 'unknown' to 'in transition from standby to on'"
-
 ##########
 
 #Create our state file if it doesn't exist
@@ -106,7 +100,7 @@ while read line ; do
                         sst_minutes=$((trimmed_sst_hours * 60 + trimmed_sst_minutes))
                         now_minutes=$((now_hour * 60 + now_min))
 			
-			if grep -q "${poweroff_str1}\|${poweroff_str2}" <<< "$line"; then
+			if grep -q standby\'$ <<< "$line"; then
 				echo "TV turned off."
 				echo "off" > ${workpath}tv_state.log
 					#if it's night time, turn the light on.
@@ -120,7 +114,7 @@ while read line ; do
 						esac
 					fi
 			fi
-			if grep -q "${poweron_str1}\|${poweron_str2}" <<< "$line"; then
+			if grep -q on\'$ <<< "$line"; then
 				echo "TV turned on."
 				echo "on" > ${workpath}tv_state.log
 					#if the light's on, turn it off.
