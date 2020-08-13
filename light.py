@@ -15,9 +15,9 @@ LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
 def colorWipeOn(strip, ledrange, green, red, blue, speed):
     for r in range(ledrange):
-        redval = (r*red)/ledrange
-        greenval = (r*green)/ledrange
-        blueval = (r*blue)/ledrange
+        redval = (r*red)//ledrange
+        greenval = (r*green)//ledrange
+        blueval = (r*blue)//ledrange
         thecolor = Color(redval,greenval,blueval)
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, thecolor)
@@ -26,9 +26,9 @@ def colorWipeOn(strip, ledrange, green, red, blue, speed):
 
 def colorWipeOff(strip, ledrange, green, red, blue, speed):
     for r in range(ledrange,-1,-1):
-        redval = (r*red)/ledrange
-        greenval = (r*green)/ledrange
-        blueval = (r*blue)/ledrange
+        redval = (r*red)//ledrange
+        greenval = (r*green)//ledrange
+        blueval = (r*blue)//ledrange
         thecolor = Color(redval,greenval,blueval)
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, thecolor)
