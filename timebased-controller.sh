@@ -41,7 +41,9 @@ do
                 long=$(tail -1 ${workpath}location.txt)
                 hdate -s -l $lat -L $long -z $tzone | grep 'sunrise' | grep -o '.....$' > ${workpath}sunrise.txt
                 hdate -s -l $lat -L $long -z $tzone | grep 'sunset' | grep -o '.....$' > ${workpath}sunset.txt
-                echo "Done - sunrise at $sunrise, sunset at $sunset"
+                sunrise=$(cat ${workpath}sunrise.txt)
+                sunset=$(cat ${workpath}sunset.txt)
+		echo "Done - sunrise at $sunrise, sunset at $sunset"
 	fi
 
 	#Timestamp for the log file
