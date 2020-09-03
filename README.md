@@ -31,7 +31,7 @@ This assumes you have a WS2812B 60-led strand connected to GPIO pin 12, (GPIO 18
 - Add your user to sudoers file to ensure they can sudo without password (required to control LED strip with python and to set clock) (https://www.mathworks.com/help/supportpkg/raspberrypi/ug/enable-passwordless-sudo-in-linux-on-raspberry-pi-hardware.html)
 - Install pip with `sudo apt install python3-pip` and install rpi-ws281x with `sudo pip install rpi-ws281x`
 - Install node.js (https://www.instructables.com/id/Install-Nodejs-and-Npm-on-Raspberry-Pi/) and install pm2 with `sudo npm install -g pm2`
-- Install hdate for sunrise and sunset calculations. `apt install hdate`. 
+- Install hdate for sunrise and sunset calculations. `sudo apt install hdate`. 
 - Use `pm2 startup` to show the command to ensure pm2 starts at boot, run the command. This will create the systemd service file.
 - If you aren't going to make your filesystem read-only, you can start the scripts with the following commands, after which they should recover after a reboot:
   - `pm2 start cec-monitor.sh`
