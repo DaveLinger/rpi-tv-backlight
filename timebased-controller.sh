@@ -2,8 +2,6 @@
 
 #I have this set to tmpfs on a read only filesystem. Necessary files will be created.
 workpath=/trash/
-#Code to get sunrise/sunset times for your area. Location is determined via IP geolocation unless this is set.
-#locationcode="26554"
 #Long-term log file. Any time the TV or light state changes, a timestamped message is written to this file
 ltlog=${workpath}ltlog.log
 #Path to the light.py script. Assumes python binary is at /usr/bin/python
@@ -38,17 +36,7 @@ do
 	
 	if [ ! -f "${workpath}sunrise.txt" ]; then
 		echo "Sunrise time file does not exist. Fetching sunrise/sunset times now."
-		if [ -z "$locationcode" ]; then
-			echo "Geolocating you by your IP"
-			tmpfile=${workpath}postalcode
-			wget -q "https://tools.keycdn.com/geo" -O "$tmpfile"
-			zipcode=$(grep -o 'Postal code</dt><dd class="col-8 text-monospace">.*</dd>' "$tmpfile" | grep -o '>.*</dd>')
-			zipcode="${zipcode:34}"
-			locationcode="${zipcode:0:5}"
-			echo "Got $locationcode"
-			rm $tmpfile
-		fi
-		curl https://ipinfo.io/ip | curl https://ipvigilante.com/$(</dev/stdin) |python -c 'import json,sys;obj=json.load(sys.stdin);print obj["data"]["latitude"];print obj["data"]["longitude"]' > ${workpath}location.txt
+		curl -s https://ipinfo.io/ip | curl -s https://ipvigilante.com/$(</dev/stdin) |python -c 'import json,sys;obj=json.load(sys.stdin);print obj["data"]["latitude"];print obj["data"]["longitude"]' > ${workpath}location.txt
                 lat=$(head -1 ${workpath}location.txt)
                 long=$(tail -1 ${workpath}location.txt)
                 hdate -s -l $lat -L $long -z $tzone | grep 'sunrise' | grep -o '.....$' > ${workpath}sunrise.txt
