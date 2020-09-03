@@ -59,8 +59,4 @@ Now reboot and use `pm2 list` and the script should be running. "npm logs" to se
 - HDMI-CEC is known to be poorly supported/implemented on most equipment. This may be flaky.
 - You can change the color/behavior of the lights by editing the code or RGB values in light.py.
 - You may need to adjust some of the variables at the top of the script files for your setup.
-- By default, your location/zip/postal code is determined by geolocating you by your IP address. If you uncomment the location code variable at the top of the scripts, it will use that location code instead.
-
-# Version 2 vs Version 1
-
-Version 1 of this software used cec-client to poll (ask) the TV for its power state every few seconds. Version 2 passively watches all HDMI-CEC communication and acts when the TV announces that it has changed power state. The new way is better because TV power state changes are reflected instantly rather than waiting for a poll/response, and especially because polling equipment for its power state can cause some jankiness (even though it's officially documented and supported by the HDMI-CEC spec). Sometimes your TV may switch inputs to the pi, sometimes your PS4 may turn on and take control, sometimes your TV may go black for a few seconds. The passive method is way better. Only downside I can think of is upon boot, the pi won't know whether the TV is on or off until its state changes. But we just set the default state to be "on" so that the light never turns on at boot time.
+- Your location/zip/postal code is determined by geolocating you by your IP address.
