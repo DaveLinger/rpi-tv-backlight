@@ -1,2 +1,5 @@
 
 .DS_Store
+.bash_history
+.bash_logout
+.bashrc
