@@ -6,9 +6,8 @@ workpath=/trash/
 ltlog=${workpath}ltlog.log
 #Path to the light.py script. Assumes python binary is at /usr/bin/python
 pypath=/home/pi/
-#Time Zone
-tzone=$(date +%z |  python -c 'import sys;z=int(sys.stdin.readline().strip());z=str(z);print(z[:-2] + ":" + z[-2:])')
-
+#geolocation
+curl -s https://ipinfo.io/ip | curl -s https://ipvigilante.com/$(</dev/stdin) |python -c 'import json,sys;obj=json.load(sys.stdin);print obj["data"]["latitude"];print obj["data"]["longitude"]' > ${workpath}location.txt
 sleep 30
 
 i=0
@@ -32,11 +31,12 @@ do
 		echo "Sunrise file exists but is over a day old. Removing."
 		rm ${workpath}sunrise.txt
 		rm ${workpath}sunset.txt
+		#Time Zone
+		tzone=$(date +%z |  python -c 'import sys;z=int(sys.stdin.readline().strip());z=str(z);print(z[:-2] + ":" + z[-2:])')
 	fi
 	
 	if [ ! -f "${workpath}sunrise.txt" ]; then
 		echo "Sunrise time file does not exist. Fetching sunrise/sunset times now."
-		curl -s https://ipinfo.io/ip | curl -s https://ipvigilante.com/$(</dev/stdin) |python -c 'import json,sys;obj=json.load(sys.stdin);print obj["data"]["latitude"];print obj["data"]["longitude"]' > ${workpath}location.txt
                 lat=$(head -1 ${workpath}location.txt)
                 long=$(tail -1 ${workpath}location.txt)
                 hdate -s -l $lat -L $long -z $tzone | grep 'sunrise' | grep -o '.....$' > ${workpath}sunrise.txt

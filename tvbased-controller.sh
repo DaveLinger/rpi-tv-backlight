@@ -6,11 +6,10 @@ workpath=/trash/
 ltlog=${workpath}ltlog.log
 #Path to the light.py script. Assumes python binary is at /usr/bin/python
 pypath=/home/pi/
-#Timezone
-tzone=$(date +%z |  python -c 'import sys;z=int(sys.stdin.readline().strip());z=str(z);print(z[:-2] + ":" + z[-2:])')
 #Path to the temporary weather file
 tmpfile=${workpath}$locationcode.out
-
+#geolocation
+curl -s https://ipinfo.io/ip | curl -s https://ipvigilante.com/$(</dev/stdin) |python -c 'import json,sys;obj=json.load(sys.stdin);print obj["data"]["latitude"];print obj["data"]["longitude"]' > ${workpath}location.txt
 ##########
 
 #Create our state file if it doesn't exist
@@ -31,11 +30,11 @@ do
 		i=1
 		echo "Setting time"
         	sudo date -s "$(wget -qSO- --max-redirect=0 google.com 2>&1 | grep Date: | cut -d' ' -f5-8)Z"
-
+		#Timezone
+		tzone=$(date +%z |  python -c 'import sys;z=int(sys.stdin.readline().strip());z=str(z);print(z[:-2] + ":" + z[-2:])')
                 if [ ! -f "${workpath}sunrise.txt" ]; then
 
                         echo "Sunrise time file does not exist. Fetching sunrise/sunset times now."
-                        curl -s https://ipinfo.io/ip | curl -s https://ipvigilante.com/$(</dev/stdin) |python -c 'import json,sys;obj=json.load(sys.stdin);print obj["data"]["latitude"];print obj["data"]["longitude"]' > ${workpath}location.txt
 			lat=$(head -1 ${workpath}location.txt)
 			long=$(tail -1 ${workpath}location.txt)
 			hdate -s -l $lat -L $long -z $tzone | grep 'sunrise' | grep -o '.....$' > ${workpath}sunrise.txt
