@@ -8,6 +8,8 @@ workpath=/trash/
 ltlog=${workpath}ltlog.log
 #Path to the light.py script. Assumes python binary is at /usr/bin/python
 pypath=/home/pi/
+#Timezone
+tzone=$(date +%z |  python -c 'import sys;z=int(sys.stdin.readline().strip());z=str(z);print(z[:-2] + ":" + z[-2:])')
 #Path to the temporary weather file
 tmpfile=${workpath}$locationcode.out
 
@@ -46,15 +48,11 @@ do
                                 echo "Got $locationcode"
                                 rm $tmpfile
                         fi
-                        wget -q "https://weather.com/weather/today/l/$locationcode" -O "$tmpfile"
-
-                        SUNR=$(grep -o '<p class="_-_-components-src-molecule-SunriseSunset-SunriseSunset--dateValue--3H780">.*am</p>' "$tmpfile" | grep -o '>.*</p>' | cut -c 2- | rev | cut -c5- | rev)
-                        SUNS=$(grep -o '<p class="_-_-components-src-molecule-SunriseSunset-SunriseSunset--dateValue--3H780">.*pm</p>' "$tmpfile" | grep -o '>.*</p>' | cut -f10,1 -d'>' | cut -c2- | rev | cut -c4- | rev)
-
-                        sunrise=$(date --date="$SUNR" +%R)
-                        sunset=$(date --date="$SUNS" +%R)
-                        echo "$sunrise" > ${workpath}sunrise.txt
-                        echo "$sunset" > ${workpath}sunset.txt
+                        curl https://ipinfo.io/ip | curl https://ipvigilante.com/$(</dev/stdin) |python -c 'import json,sys;obj=json.load(sys.stdin);print obj["data"]["latitude"];print obj["data"]["longitude"]' > ${workpath}location.txt
+			lat=$(head -1 ${workpath}location.txt)
+			long=$(tail -1 ${workpath}location.txt)
+			hdate -s -l $lat -L $long -z $tzone | grep 'sunrise' | grep -o '.....$' > ${workpath}sunrise.txt
+			hdate -s -l $lat -L $long -z $tzone | grep 'sunset' | grep -o '.....$' > ${workpath}sunset.txt
                         echo "Done - sunrise at $sunrise, sunset at $sunset"
 
                 fi
@@ -100,13 +98,13 @@ while read line ; do
                         sst_minutes=$((trimmed_sst_hours * 60 + trimmed_sst_minutes))
                         now_minutes=$((now_hour * 60 + now_min))
 			
-			if grep -q standby\'$ <<< "$line"; then
+                        if grep -q standby\'$  <<< "$line"; then
 				echo "TV turned off."
 				echo "off" > ${workpath}tv_state.log
 					#if it's night time, turn the light on.
 					if [[ $now_minutes -gt $sst_minutes || $now_minutes -lt $srt_minutes ]]; then
 						echo "Turning light on"
-						sudo timeout -k 5 10s /usr/bin/python ${pypath}light.py on; ec=$?
+						sudo timeout -k 5 10s /usr/bin/python3 ${pypath}light.py on; ec=$?
 						case $ec in
 							0) echo "on" > ${workpath}light_state.log;;
 							124) echo "Python hung up and was killed";;
@@ -114,13 +112,13 @@ while read line ; do
 						esac
 					fi
 			fi
-			if grep -q on\'$ <<< "$line"; then
-				echo "TV turned on."
+			if grep -q on\'$ <<< "$line"; then	
+                                echo "TV turned on."
 				echo "on" > ${workpath}tv_state.log
 					#if the light's on, turn it off.
 					if [[ $lightstate == "on" ]]; then
 						echo "Turning light off"
-						sudo timeout -k 5 10s /usr/bin/python ${pypath}light.py off; ec=$?
+						sudo timeout -k 5 10s /usr/bin/python3 ${pypath}light.py off; ec=$?
 						case $ec in
 							0) echo "off" > ${workpath}light_state.log;;
 							124) echo "Python hung up and was killed";;
