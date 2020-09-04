@@ -49,7 +49,6 @@ To make pm2 start your script at boot, you need to edit /etc/systemd/system/pm2-
 
 
 `ExecStart=/usr/lib/node_modules/pm2/bin/pm2 start /home/pi/cec-monitor.sh
-ExecStartPost=/usr/lib/node_modules/pm2/bin/pm2 start /home/pi/shared/startup.sh
 ExecStartPost=/usr/lib/node_modules/pm2/bin/pm2 start /home/pi/timebased-controller.sh
 ExecStartPost=/usr/lib/node_modules/pm2/bin/pm2 start /home/pi/tvbased-controller.sh`
 
