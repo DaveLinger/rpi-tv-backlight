@@ -1,22 +1,8 @@
-#Set our vars
-
-#I have this set to tmpfs on a read only filesystem. Necessary files will be created.
-workpath=/trash/
-#Long-term log file. Any time the TV or light state changes, a timestamped message is written to this file
-ltlog=${workpath}ltlog.log
-#Path to the light.py script. Assumes python binary is at /usr/bin/python
-pypath=/home/pi/
-#Path to the temporary weather file
-tmpfile=${workpath}$locationcode.out
-#geolocation
-curl -s https://ipinfo.io/ip | curl -s https://ipvigilante.com/$(</dev/stdin) |python -c 'import json,sys;obj=json.load(sys.stdin);print obj["data"]["latitude"];print obj["data"]["longitude"]' > ${workpath}location.txt
-##########
-
-#Create our state file if it doesn't exist
-echo "off" > ${workpath}light_state.log
-
-#Create our state file if it doesn't exist
-echo "on" > ${workpath}tv_state.log
+#!/bin/bash
+for file in ./shared/*;
+  do
+    source $file;
+  done
 
 #Check if we are online. If we aren't, die. If we are, set the clock and continue.
 #This is necessary for read-only filesystem as the raspberry pi does not have a realtime clock.
