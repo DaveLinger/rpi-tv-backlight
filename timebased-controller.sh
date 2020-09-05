@@ -30,14 +30,7 @@ do
 	fi
 
 	if [ ! -f "${workpath}sunrise.txt" ]; then
-		echo "Sunrise time file does not exist. Fetching sunrise/sunset times now."
-		lat=$(head -1 ${workpath}location.txt)
-                long=$(tail -1 ${workpath}location.txt)
-                hdate -s -l $lat -L $long -z $tzone | grep 'sunrise' | grep -o '.....$' > ${workpath}sunrise.txt
-                hdate -s -l $lat -L $long -z $tzone | grep 'sunset' | grep -o '.....$' > ${workpath}sunset.txt
-                sunrise=$(cat ${workpath}sunrise.txt)
-                sunset=$(cat ${workpath}sunset.txt)
-		echo "Done - sunrise at $sunrise, sunset at $sunset"
+		sundial
 	fi
 
 	#Timestamp for the log file
