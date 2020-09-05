@@ -1,9 +1,11 @@
 #!/bin/bash
 sleep 5
 
-SCRIPT_PATH="/home/pi/shared/settings.sh"
+for file in /home/pi/shared/*;
+  do
+      source $file;
+ done
 
-source $SCRIPT_PATH
 #Check if we are online. If we aren't, die. If we are, set the clock and continue.
 #This is necessary for read-only filesystem as the raspberry pi does not have a realtime clock.
 #pm2 will restart this script if it dies.
@@ -16,7 +18,7 @@ do
 		i=1
 		echo "Setting time"
         	sudo date -s "$(wget -qSO- --max-redirect=0 google.com 2>&1 | grep Date: | cut -d' ' -f5-8)Z"
-		#Timezone
+
                 if [ ! -f "${workpath}sunrise.txt" ]; then
 
                         echo "Sunrise time file does not exist. Fetching sunrise/sunset times now."

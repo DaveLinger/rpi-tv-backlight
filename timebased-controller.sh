@@ -1,9 +1,10 @@
 
 sleep 5
 
-SCRIPT_PATH="/home/pi/shared/settings.sh"
-
-source $SCRIPT_PATH
+for file in /home/pi/shared/*;
+  do
+      source $file;
+ done
 
 i=0
 while [ $i -lt 1 ]
