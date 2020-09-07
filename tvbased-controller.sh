@@ -72,27 +72,14 @@ while read line ; do
 					#if it's night time, turn the light on.
 					if [[ $now_minutes -gt $sst_minutes || $now_minutes -lt $srt_minutes ]]; then
 						echo "Turning light on"
-						sudo timeout -k 5 10s /usr/bin/python3 ${pypath}light.py on; ec=$?
-						case $ec in
-							0) echo "on" > ${workpath}light_state.log;;
-							124) echo "Python hung up and was killed";;
-							*) echo "Python light script unhandled exit code $ec";;
-						esac
+						lights_on
 					fi
 			fi
 			if grep -q on\'$ <<< "$line"; then	
                                 echo "TV turned on."
 				echo "on" > ${workpath}tv_state.log
 					#if the light's on, turn it off.
-					if [[ $lightstate == "on" ]]; then
-						echo "Turning light off"
-						sudo timeout -k 5 10s /usr/bin/python3 ${pypath}light.py off; ec=$?
-						case $ec in
-							0) echo "off" > ${workpath}light_state.log;;
-							124) echo "Python hung up and was killed";;
-							*) echo "Python light script unhandled exit code $ec";;
-						esac
-					fi
+					lights_out
 			fi
 
         fi

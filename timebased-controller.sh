@@ -68,26 +68,12 @@ do
 			if [[ $lightstate == "off" ]]; then
 				#TV is off, it's dark, and the light is off. Let's turn it on.
 				echo "Turning light on"
-				sudo timeout -k 5 10s /usr/bin/python3 ${pypath}light.py on; ec=$?
-				case $ec in
-					0) echo "on" > ${workpath}light_state.log;;
-					124) echo "Python hung up and was killed";;
-					*) echo "Python light script unhandled exit code $ec";;
-				esac
+				lights_on
 			fi
 		fi
 		if [[ $now_minutes -lt $sst_minutes && $now_minutes -gt $srt_minutes ]]; then
 			#it's after sunrise and before sunset, light should be off.
-			if [[ $lightstate == "on" ]]; then
-				#TV is off, it's light outside, and the light is on. Let's turn it off.
-				echo "Turning light off"
-				sudo timeout -k 5 10s /usr/bin/python3 ${pypath}light.py off; ec=$?
-				case $ec in
-					0) echo "off" > ${workpath}light_state.log;;
-					124) echo "Python hung up and was killed";;
-					*) echo "Python light script unhandled exit code $ec";;
-				esac
-			fi
+			lights_out
 		fi
 	fi
 
