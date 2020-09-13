@@ -11,15 +11,12 @@ sundial () {
 }
 
 lights_out() {
-  if [[ $lightstate == "on" ]]; then
-						echo "Turning light off"
-						sudo timeout -k 5 10s /usr/bin/python3 ${pypath}light.py off; ec=$?
-						case $ec in
-							0) echo "off" > ${workpath}light_state.log;;
-							124) echo "Python hung up and was killed";;
-							*) echo "Python light script unhandled exit code $ec";;
-						esac
-					fi
+  sudo timeout -k 5 10s /usr/bin/python3 ${pypath}light.py off; ec=$?
+				case $ec in
+					0) echo "off" > ${workpath}light_state.log;;
+					124) echo "Python hung up and was killed";;
+					*) echo "Python light script unhandled exit code $ec";;
+				esac
 }
 
 lights_on() {

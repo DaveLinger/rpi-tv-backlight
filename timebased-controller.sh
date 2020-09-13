@@ -73,7 +73,10 @@ do
 		fi
 		if [[ $now_minutes -lt $sst_minutes && $now_minutes -gt $srt_minutes ]]; then
 			#it's after sunrise and before sunset, light should be off.
-			lights_out
+			if [[ $lightstate == "on" ]]; then
+						echo "Turning light off"
+						lights_out
+					fi
 		fi
 	fi
 

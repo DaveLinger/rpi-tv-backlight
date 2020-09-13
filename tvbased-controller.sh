@@ -79,7 +79,10 @@ while read line ; do
                                 echo "TV turned on."
 				echo "on" > ${workpath}tv_state.log
 					#if the light's on, turn it off.
-					lights_out
+					if [[ $lightstate == "on" ]]; then
+						echo "Turning light off"
+						lights_out
+					fi
 			fi
 
         fi
