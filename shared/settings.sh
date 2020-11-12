@@ -5,4 +5,4 @@ ltlog=${workpath}ltlog.log
 #Path to the light.py script. Assumes python binary is at /usr/bin/python
 pypath=/home/pi/
 #Timezone
-tzone=$(date +%:z)
+tzone=$(date +%-:z)
