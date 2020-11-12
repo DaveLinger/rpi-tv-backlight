@@ -104,15 +104,8 @@ while read line ; do
                                 echo "TV turned on."
 				echo "on" > ${workpath}tv_state.log
 					#if the light's on, turn it off.
-					if [[ $lightstate == "on" ]]; then
-						echo "Turning light off"
-						sudo timeout -k 5 10s /usr/bin/python3 ${pypath}light.py off; ec=$?
-						case $ec in
-							0) echo "off" > ${workpath}light_state.log;;
-							124) echo "Python hung up and was killed";;
-							*) echo "Python light script unhandled exit code $ec";;
-						esac
-					fi
+					lights_out
+
 			fi
 
         fi

@@ -22,7 +22,7 @@ def colorWipeOn(strip, ledrange, green, red, blue, speed):
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, thecolor)
         strip.show()
-	time.sleep(speed)
+        time.sleep(speed)
 
 def colorWipeOff(strip, ledrange, green, red, blue, speed):
     for r in range(ledrange,-1,-1):
