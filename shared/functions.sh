@@ -22,3 +22,12 @@ lights_out () {
                 esac
         fi
 }
+
+lights_on() {
+  sudo timeout -k 5 10s /usr/bin/python3 ${pypath}light.py on; ec=$?
+				case $ec in
+					0) echo "on" > ${workpath}light_state.log;;
+					124) echo "Python hung up and was killed";;
+					*) echo "Python light script unhandled exit code $ec";;
+				esac
+}
