@@ -49,9 +49,9 @@ You will need to remove the ~/.pm2 directory and make a symbolic link pointing t
 To make pm2 start your script at boot, you need to edit /etc/systemd/system/pm2-pi.service and change your "ExecStart" to start your scripts with pm2:
 
 
-`ExecStart=/usr/local/bin/pm2 start /home/pi/rpi-tv-backlight/cec-monitor.sh
-ExecStartPost=/usr/local/bin/pm2 start /home/pi/rpi-tv-backlight/timebased-controller.sh
-ExecStartPost=/usr/local/bin/pm2 start /home/pi/rpi-tv-backlight/tvbased-controller.sh`
+`ExecStart=/usr/local/bin/pm2 start /home/pi/rpi-tv-backlight/cec-monitor.sh`
+`ExecStartPost=/usr/local/bin/pm2 start /home/pi/rpi-tv-backlight/timebased-controller.sh`
+`ExecStartPost=/usr/local/bin/pm2 start /home/pi/rpi-tv-backlight/tvbased-controller.sh`
 
 Now reboot and use `pm2 list` and the script should be running. "npm logs" to see live log output.
 
