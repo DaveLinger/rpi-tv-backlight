@@ -35,9 +35,9 @@ This assumes you have a WS2812B 60-led strand connected to GPIO pin 12, (GPIO 18
 - Add your user to sudoers file to ensure they can sudo without password (required to control LED strip with python and to set clock) (https://www.mathworks.com/help/supportpkg/raspberrypi/ug/enable-passwordless-sudo-in-linux-on-raspberry-pi-hardware.html)
 - Clone this repo. `git clone https://github.com/DaveLinger/rpi-tv-backlight`
 - If you aren't going to make your filesystem read-only, you can start the scripts with the following commands, after which they should recover after a reboot:
-  - `pm2 start cec-monitor.sh`
-  - `pm2 start tvbased-controller.sh`
-  - `pm2 start timebased-controller.sh`
+  - `pm2 start rpi-tv-backlight/cec-monitor.sh`
+  - `pm2 start rpi-tv-backlight/tvbased-controller.sh`
+  - `pm2 start rpi-tv-backlight/timebased-controller.sh`
   - `pm2 save`
 
 If you wish to run this on a read-only filesystem (recommended), follow these instructions: https://medium.com/swlh/make-your-raspberry-pi-file-system-read-only-raspbian-buster-c558694de79
