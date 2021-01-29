@@ -25,38 +25,40 @@ This assumes you have a WS2812B 60-led strand connected to GPIO pin 12, (GPIO 18
 
 # How to install software
 
-- Install Raspbian Buster. `sudo apt-get update`, `sudo apt-get upgrade`.
-- Put these files somewhere. I have mine in pi's home directory. For example `/home/pi/cec-monitor.sh`.
-- Install cec-utils. `sudo apt-get install cec-utils`.
-- Add your user to sudoers file to ensure they can sudo without password (required to control LED strip with python and to set clock) (https://www.mathworks.com/help/supportpkg/raspberrypi/ug/enable-passwordless-sudo-in-linux-on-raspberry-pi-hardware.html)
-- Install pip with `sudo apt install python3-pip` and install rpi-ws281x with `sudo pip install rpi-ws281x`
-- Install node.js (https://www.instructables.com/id/Install-Nodejs-and-Npm-on-Raspberry-Pi/) and install pm2 with `sudo npm install -g pm2`
-- Install hdate for sunrise and sunset calculations. `sudo apt install hdate`. 
+- Install Raspbian Buster. `sudo apt-get update`, `sudo apt-get upgrade`
+- Set your time zone. Use `sudo raspi-config`, pick `5 Localization Options`, then `L2 Timezone`
+- Install some stuff. `sudo apt install git python3-pip cec-utils hdate`
+- Install rpi-ws281x with `sudo pip3 install rpi-ws281x`
+- Install node.js (https://www.instructables.com/id/Install-Nodejs-and-Npm-on-Raspberry-Pi/)
+- Install pm2 with `sudo npm install -g pm2`
 - Use `pm2 startup` to show the command to ensure pm2 starts at boot, run the command. This will create the systemd service file.
+- Add your user to sudoers file to ensure they can sudo without password (required to control LED strip with python and to set clock) (https://www.mathworks.com/help/supportpkg/raspberrypi/ug/enable-passwordless-sudo-in-linux-on-raspberry-pi-hardware.html)
+- Clone this repo. `git clone https://github.com/DaveLinger/rpi-tv-backlight`
 - If you aren't going to make your filesystem read-only, you can start the scripts with the following commands, after which they should recover after a reboot:
-  - `pm2 start cec-monitor.sh`
-  - `pm2 start tvbased-controller.sh`
-  - `pm2 start timebased-controller.sh`
+  - `pm2 start rpi-tv-backlight/cec-monitor.sh`
+  - `pm2 start rpi-tv-backlight/tvbased-controller.sh`
+  - `pm2 start rpi-tv-backlight/timebased-controller.sh`
   - `pm2 save`
 
 If you wish to run this on a read-only filesystem (recommended), follow these instructions: https://medium.com/swlh/make-your-raspberry-pi-file-system-read-only-raspbian-buster-c558694de79
 
 I added an additional tmpfs (ram) mount in `/etc/fstab` just for this script's temporary files, first create the mount point: `mkdir /trash`  Then add the following to fstab: `tmpfs        /trash          tmpfs   nosuid,nodev         0       0 `
 
-You will need to kill pm2, remove ~/.pm2 directory, and make a symbolic link pointing that directory to your new tmpfs mount with `ln -s /trash/ ~/.pm2` (This way when pm2 starts with a read-only filesystem, it can still write to this folder in RAM)
+You will need to remove the ~/.pm2 directory and make a symbolic link pointing that directory to your new tmpfs mount with `ln -s /trash/ ~/.pm2` (This way when pm2 starts with a read-only filesystem, it can still write to this folder in RAM)
 
 To make pm2 start your script at boot, you need to edit /etc/systemd/system/pm2-pi.service and change your "ExecStart" to start your scripts with pm2:
 
 
-`ExecStart=/usr/lib/node_modules/pm2/bin/pm2 start /home/pi/cec-monitor.sh
-ExecStartPost=/usr/lib/node_modules/pm2/bin/pm2 start /home/pi/timebased-controller.sh
-ExecStartPost=/usr/lib/node_modules/pm2/bin/pm2 start /home/pi/tvbased-controller.sh`
+`ExecStart=/usr/local/bin/pm2 start /home/pi/rpi-tv-backlight/cec-monitor.sh`
 
-Now reboot and use `pm2 list` and the script should be running. "npm logs" to see live log output.
+`ExecStartPost=/usr/local/bin/pm2 start /home/pi/rpi-tv-backlight/timebased-controller.sh`
+
+`ExecStartPost=/usr/local/bin/pm2 start /home/pi/rpi-tv-backlight/tvbased-controller.sh`
+
+Now reboot and use `pm2 list` and the script should be running. `pm2 logs` to see live log output.
 
 # Notes
 
 - HDMI-CEC is known to be poorly supported/implemented on most equipment. This may be flaky.
 - You can change the color/behavior of the lights by editing the code or RGB values in light.py.
-- You may need to adjust some of the variables at the top of the script files for your setup.
 - Your location/zip/postal code is determined by geolocating you by your IP address.
