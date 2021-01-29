@@ -55,7 +55,7 @@ To make pm2 start your script at boot, you need to edit /etc/systemd/system/pm2-
 
 `ExecStartPost=/usr/local/bin/pm2 start /home/pi/rpi-tv-backlight/tvbased-controller.sh`
 
-Now reboot and use `pm2 list` and the script should be running. "npm logs" to see live log output.
+Now reboot and use `pm2 list` and the script should be running. `pm2 logs` to see live log output.
 
 # Notes
 
