@@ -1,6 +1,6 @@
 sleep 5
 
-for file in /home/pi/shared/*;
+for file in /home/pi/rpi-tv-backlight/shared/*;
   do
       source $file;
  done
